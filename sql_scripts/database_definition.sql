@@ -13,7 +13,8 @@ create table if not exists authentication_tokens
     valid_from  timestamp           not null,
     valid_until timestamp           not null,
     is_valid    bool                not null default true,
-    in_use      boolean             not null default false
+    in_use      boolean             not null default false,
+    id_house    uuid                not null references houses(id)
 );
 
 create table if not exists accounts
