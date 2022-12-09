@@ -30,7 +30,7 @@ create table if not exists environments
     id       uuid primary key not null,
     name     varchar(255)     not null,
     house_id uuid             not null references houses (id)
-);
+    );
 
 create table if not exists devices
 (
@@ -40,6 +40,7 @@ create table if not exists devices
     is_online      boolean          not null,
     lwt_topic      varchar(255)     not null,
     name           varchar(255)     not null,
+    device_type    varchar(100)     not null,
     environment_id uuid             not null,
     house_id       uuid             not null references houses (id)
-);
+    );
