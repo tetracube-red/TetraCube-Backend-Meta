@@ -1,45 +1,35 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+create extension if not exists "uuid-ossp";
 
 create schema if not exists gateway;
 
-create table if not exists gateway.houses
+create table if not exists gateway.tetracubes
 (
-    id   uuid primary key    not null,
+    id uuid primary key not null,
     name varchar(255) unique not null
 );
 
-create table if not exists gateway.authentication_tokens
+create table if not exists gateway.guests
 (
-    id          uuid primary key    not null,
-    token       varchar(255) unique not null,
-    valid_from  timestamp           not null,
-    valid_until timestamp           not null,
-    is_valid    bool                not null default true,
-    in_use      boolean             not null default false,
-    id_house    uuid                not null references gateway.houses (id)
+    id uuid primary key not null,
+    nickname varchar(255) unique not null,
+    password varchar(255) not null,
+    tetracube_id uuid not null references gateway.tetracubes (id)
 );
 
-create table if not exists gateway.users
+create table if not exists gateway.permissions
 (
-    id                      uuid primary key    not null,
-    name                    varchar(255) unique not null,
-    id_house                uuid                not null references gateway.houses (id),
-    id_authentication_token uuid                not null references gateway.authentication_tokens (id)
-);
-
-create table if not exists gateway.authorizations
-(
-    id   uuid primary key    not null,
+    id uuid primary key not null,
     name varchar(255) unique not null
 );
 
-create table if not exists gateway.users_authorizations
+create table if not exists gateway.guests_permissions
 (
-    user_id          uuid not null references gateway.users (id),
-    authorization_id uuid not null references gateway.authorizations (id),
-    PRIMARY KEY (user_id, authorization_id)
+    guest_id uuid not null references gateway.guests (id),
+    permission_id uuid not null references gateway.permissions (id),
+    primary key (guest_id, permission_id)
 );
 
-insert into gateway.authorizations values
-                                       ('cdedb6b9-b818-4643-8ae8-e66e3d5f0825', 'CAN_SMART_HOME'),
-                                       ('479a54d6-21a1-485e-bd6d-95ad326efcfe', 'CAN_TO_DO');
+insert into gateway.permissions
+values
+    ('cdedb6b9-b818-4643-8ae8-e66e3d5f0825', 'CAN_SMART_HOME'),
+    ('479a54d6-21a1-485e-bd6d-95ad326efcfe', 'CAN_TO_DO');
